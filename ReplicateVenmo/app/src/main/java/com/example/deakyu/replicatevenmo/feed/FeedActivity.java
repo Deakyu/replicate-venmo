@@ -16,7 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.deakyu.replicatevenmo.NotificationActivity;
+import com.example.deakyu.replicatevenmo.notification.NotificationActivity;
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.ViewPagerAdapter;
 
@@ -46,6 +46,7 @@ public class FeedActivity extends AppCompatActivity
         setupDrawer();
     }
 
+    // region Setting Basic Layout - toolbar, FAB, Drawer, ViewPager, etc..
     private void setupToolbar() {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -72,6 +73,7 @@ public class FeedActivity extends AppCompatActivity
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+    // endregion
 
     // region TabLayout with ViewPager Methods
     private void setupViewPagerWithTabLayout() {
