@@ -24,26 +24,29 @@ public class NotificationActivity extends AppCompatActivity {
     private CompositeSubscription subscriptions = new CompositeSubscription();
     private NotificationViewModel notificationViewModel;
     private List<Notification> currentNotifications;
+    private NotificationStorageUtil storageUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
+        storageUtil = new NotificationStorageUtil(getApplicationContext());
+        notificationViewModel = new NotificationViewModel(new NotificationInteractorImpl(), AndroidSchedulers.mainThread());
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
-
-        notificationViewModel = new NotificationViewModel(new NotificationInteractorImpl(), AndroidSchedulers.mainThread());
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if(isInternetAvailable()) {
             getNotificationsFromServer();
         } else {
+            getNotificationsFromStorage();
             Toast.makeText(NotificationActivity.this, "Internet Not Available", Toast.LENGTH_SHORT).show();
         }
     }
@@ -52,6 +55,10 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         subscriptions.unsubscribe();
+    }
+
+    private void getNotificationsFromStorage() {
+        currentNotifications = storageUtil.loadNotifications();
     }
 
     private void getNotificationsFromServer() {
@@ -63,14 +70,14 @@ public class NotificationActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                System.out.println("DEE error on server");
+                Toast.makeText(NotificationActivity.this, "Error getting data from server", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
             @Override
             public void onNext(List<Notification> remoteNotification) {
                 currentNotifications = remoteNotification;
-                System.out.println("Debugging purpose line");
+                storageUtil.storeNotifications(remoteNotification);
             }
         }));
     }
