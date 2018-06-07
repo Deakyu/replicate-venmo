@@ -32,9 +32,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(itemClickListener != null) {
-                        itemClickListener.onItemClick(v, getAdapterPosition());
-                    }
+                    if(itemClickListener != null) itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }
@@ -75,11 +73,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             this.notifications = notifications;
             notifyDataSetChanged();
         }
-    }
-
-    public void setNotificationByPosition(int pos, Notification newNotification) {
-        this.notifications.get(pos).setRead(!this.notifications.get(pos).isRead());
-        notifyItemChanged(pos);
     }
 
     @Override
