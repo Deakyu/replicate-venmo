@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
 
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.ViewHolder> {
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public ConstraintLayout row;
         public TextView title;
         public TextView description;
@@ -30,16 +29,29 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             title = iv.findViewById(R.id.title);
             description = iv.findViewById(R.id.description);
             checkImage = iv.findViewById(R.id.check_image);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(itemClickListener != null) {
+                        itemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
     private final LayoutInflater inflater;
     private List<Notification> notifications;
     private Context context;
+    private NotificationItemClickListener itemClickListener;
 
     public NotificationListAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
+    }
+
+    public void setItemClickListener(NotificationItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -62,9 +74,12 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         if(notifications != null) {
             this.notifications = notifications;
             notifyDataSetChanged();
-        } else {
-            Toast.makeText(context, "Empty Notification List", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void setNotificationByPosition(int pos, Notification newNotification) {
+        this.notifications.get(pos).setRead(!this.notifications.get(pos).isRead());
+        notifyItemChanged(pos);
     }
 
     @Override

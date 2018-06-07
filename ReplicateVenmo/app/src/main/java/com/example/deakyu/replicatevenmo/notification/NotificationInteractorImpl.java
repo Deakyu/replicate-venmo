@@ -28,4 +28,9 @@ public class NotificationInteractorImpl implements NotificationInteractor {
     public Observable<List<Notification>> getNotifications() {
         return service.getNotifications().subscribeOn(Schedulers.io());
     }
+
+    @Override
+    public Observable<Notification> updateNotification(int id, Notification notification) {
+        return service.updateNotification(id, notification).subscribeOn(Schedulers.io());
+    }
 }

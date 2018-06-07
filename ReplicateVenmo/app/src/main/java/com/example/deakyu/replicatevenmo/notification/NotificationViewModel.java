@@ -19,4 +19,8 @@ public class NotificationViewModel {
         return interactor.getNotifications().observeOn(scheduler);
     }
 
+    public Observable<Notification> updateNotification(int id, Notification notification) {
+        return interactor.updateNotification(id, notification);
+    }
+
 }

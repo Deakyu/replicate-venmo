@@ -8,4 +8,6 @@ public interface NotificationInteractor {
 
     Observable<List<Notification>> getNotifications();
 
+    Observable<Notification> updateNotification(int id, Notification notification);
+
 }

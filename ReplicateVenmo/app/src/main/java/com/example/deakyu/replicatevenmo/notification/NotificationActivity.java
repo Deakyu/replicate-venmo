@@ -14,6 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
@@ -26,7 +27,19 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class NotificationActivity extends AppCompatActivity {
+public class NotificationActivity extends AppCompatActivity implements NotificationItemClickListener{
+
+    @Override
+    public void onItemClick(View view, int pos) {
+        // Item Clicked - update notification through server
+        boolean read = currentNotifications.get(pos).isRead();
+        currentNotifications.get(pos).setRead(!read);
+        view.findViewById(R.id.check_image).setVisibility(currentNotifications.get(pos).isRead() ? View.VISIBLE : View.GONE);
+
+        Notification curNotif = currentNotifications.get(pos);
+        int id = curNotif.getId();
+        updateNotificationOnServer(id, curNotif);
+    }
 
     private Toolbar toolbar;
 
@@ -57,18 +70,6 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if(isInternetAvailable()) {
-            getNotificationsFromServer();
-            Toast.makeText(NotificationActivity.this, "Internet Available", Toast.LENGTH_SHORT).show();
-        } else {
-            getNotificationsFromStorage();
-            Toast.makeText(NotificationActivity.this, "Internet Not Available", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         subscriptions.unsubscribe();
@@ -79,6 +80,7 @@ public class NotificationActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.notification_recycler_view);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         adapter = new NotificationListAdapter(this);
+        adapter.setItemClickListener(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -88,6 +90,7 @@ public class NotificationActivity extends AppCompatActivity {
         adapter.setNotifications(currentNotifications);
     }
 
+    // region ViewModel Methods
     private void getNotificationsFromServer() {
         subscriptions.add(notificationViewModel.getNotifications().subscribe(new Observer<List<Notification>>() {
             @Override
@@ -95,7 +98,6 @@ public class NotificationActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Toast.makeText(NotificationActivity.this, "Error getting data from server", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
                 currentNotifications = storageUtil.loadNotifications();
                 adapter.setNotifications(currentNotifications);
@@ -110,6 +112,22 @@ public class NotificationActivity extends AppCompatActivity {
         }));
     }
 
+    private void updateNotificationOnServer(int id, Notification notification) {
+        subscriptions.add(notificationViewModel.updateNotification(id, notification).subscribe(new Observer<Notification>() {
+            @Override
+            public void onCompleted() { }
+
+            @Override
+            public void onError(Throwable e) { e.printStackTrace();}
+
+            @Override
+            public void onNext(Notification notification) {
+                storageUtil.storeNotifications(currentNotifications);
+            }
+        }));
+    }
+    // endregion
+
     // region Network Checking Methods
     private boolean isInternetAvailable() {
         int status = NetworkUtil.getConnectivityStatusString(getApplicationContext());
@@ -120,15 +138,15 @@ public class NotificationActivity extends AppCompatActivity {
     private BroadcastReceiver networkListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-        int status = NetworkUtil.getConnectivityStatusString(context);
-        if(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) { // Connection Lost
-            Toast.makeText(getApplicationContext(), "Connection Lost", Toast.LENGTH_SHORT).show();
-            subscriptions.unsubscribe();
-            getNotificationsFromStorage();
-        } else { // Connection restored
-            Toast.makeText(getApplicationContext(), "Connection Restored", Toast.LENGTH_SHORT).show();
-            getNotificationsFromServer();
-        }
+            int status = NetworkUtil.getConnectivityStatusString(context);
+            if(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) { // Connection Lost
+                Toast.makeText(getApplicationContext(), "Connection Lost", Toast.LENGTH_SHORT).show();
+                subscriptions.unsubscribe();
+                getNotificationsFromStorage();
+            } else { // Connection restored
+                Toast.makeText(getApplicationContext(), "Connection Restored", Toast.LENGTH_SHORT).show();
+                getNotificationsFromServer();
+            }
         }
     };
 
