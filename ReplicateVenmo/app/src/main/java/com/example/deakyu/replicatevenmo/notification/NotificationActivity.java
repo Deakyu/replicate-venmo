@@ -21,24 +21,40 @@ import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.functions.FuncN;
+import rx.observables.AsyncOnSubscribe;
 import rx.subscriptions.CompositeSubscription;
 
 public class NotificationActivity extends AppCompatActivity implements NotificationItemClickListener{
+
+    private List<Notification> toBeUpdated = new ArrayList<>();
 
     @Override
     public void onItemClick(View view, int pos) {
         // Item Clicked - update notification through server
         boolean read = currentNotifications.get(pos).isRead();
         currentNotifications.get(pos).setRead(!read);
+        storageUtil.storeNotifications(currentNotifications);
         view.findViewById(R.id.check_image).setVisibility(currentNotifications.get(pos).isRead() ? View.VISIBLE : View.GONE);
 
         Notification curNotif = currentNotifications.get(pos);
         int id = curNotif.getId();
-        updateNotificationOnServer(id, curNotif);
+
+        if(isInternetAvailable()) {
+            updateNotificationOnServer(id, curNotif);
+            System.out.println("DEE onItemClick Internet Available " + curNotif.getTitle());
+        } else {
+            toBeUpdated.add(curNotif);
+            System.out.println("DEE onItemClick Internet NOT Available " + curNotif.getTitle());
+        }
     }
 
     private Toolbar toolbar;
@@ -126,6 +142,27 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
             }
         }));
     }
+
+    private void updateMultipleNotifications(List<Notification> notifications) {
+        System.out.println("DEE updateMultipleNotifications()");
+        for(int i=0 ; i < notifications.size() ; i++) {
+            Notification cur = notifications.get(i);
+            subscriptions.add(notificationViewModel.updateNotification(cur.getId(), cur).subscribe(new Observer<Notification>() {
+                @Override
+                public void onCompleted() { }
+
+                @Override
+                public void onError(Throwable e) {
+                    System.out.println("DEE update error!");
+                }
+
+                @Override
+                public void onNext(Notification notification) {
+                    System.out.println("DEE updated");
+                }
+            }));
+        }
+    }
     // endregion
 
     // region Network Checking Methods
@@ -140,12 +177,17 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
         public void onReceive(Context context, Intent intent) {
             int status = NetworkUtil.getConnectivityStatusString(context);
             if(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) { // Connection Lost
-                Toast.makeText(getApplicationContext(), "Connection Lost", Toast.LENGTH_SHORT).show();
-                subscriptions.unsubscribe();
+                subscriptions.clear();
                 getNotificationsFromStorage();
+                toBeUpdated.clear();
+                System.out.println("DEE connection lost");
             } else { // Connection restored
-                Toast.makeText(getApplicationContext(), "Connection Restored", Toast.LENGTH_SHORT).show();
+                if(!toBeUpdated.isEmpty()) {
+                    updateMultipleNotifications(toBeUpdated);
+                    System.out.println("DEE toBeUpdated Not Empty");
+                }
                 getNotificationsFromServer();
+                System.out.println("DEE connection restored: " + toBeUpdated.size());
             }
         }
     };

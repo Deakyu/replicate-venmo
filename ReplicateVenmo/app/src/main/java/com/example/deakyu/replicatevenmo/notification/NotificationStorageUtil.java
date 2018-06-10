@@ -39,6 +39,33 @@ public class NotificationStorageUtil {
         return gson.fromJson(json, type);
     }
 
+    public void saveLocalChangesForNotifications(List<Notification> notifications) {
+        preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(notifications);
+        editor.putString("localChanges", json);
+        editor.apply();
+    }
+
+    public void clearLocalChanges() {
+        preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("localChanges", "{}");
+        editor.apply();
+    }
+
+    public List<Notification> loadLocalChanges() {
+        preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String json = preferences.getString("localChanges", null);
+        Type type = new TypeToken<List<Notification>>(){}.getType();
+        return gson.fromJson(json, type);
+    }
+
     public void clearCache() {
         preferences = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();

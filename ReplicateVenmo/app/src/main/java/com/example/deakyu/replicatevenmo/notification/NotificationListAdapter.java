@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
 
@@ -32,7 +33,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(itemClickListener != null) itemClickListener.onItemClick(v, getAdapterPosition());
+                if(itemClickListener != null) itemClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }
@@ -72,6 +73,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         if(notifications != null) {
             this.notifications = notifications;
             notifyDataSetChanged();
+            System.out.println("DEE data changed not null");
+        } else {
+            System.out.println("DEE data not changed NULL");
         }
     }
 
