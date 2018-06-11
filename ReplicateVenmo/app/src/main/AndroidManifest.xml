@@ -11,11 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppVenmoTheme">
         <activity
             android:name=".feed.FeedActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppVenmoTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -27,7 +27,7 @@
             android:name=".notification.NotificationActivity"
             android:label="Notifications"
             android:parentActivityName=".feed.FeedActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppVenmoTheme.NoActionBar"/>
     </application>
 
 </manifest>

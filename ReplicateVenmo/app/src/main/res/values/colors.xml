@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorWhite">#F9F9F9</color>
+    <color name="colorVenmo">#3F94D0</color>
+    <color name="colorVenmoDark">#0864A5</color>
+    <color name="colorGray">#DCDCDC</color>
+    <color name="colorLightBlack">#CC000000</color>
 </resources>
