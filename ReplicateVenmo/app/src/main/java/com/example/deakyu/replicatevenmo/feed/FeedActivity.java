@@ -1,11 +1,13 @@
 package com.example.deakyu.replicatevenmo.feed;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,9 +21,13 @@ import android.view.MenuItem;
 import com.example.deakyu.replicatevenmo.notification.NotificationActivity;
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.ViewPagerAdapter;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 
 public class FeedActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int REQUEST_INVITE = 0;
+    private static final String TAG = FeedActivity.class.getSimpleName();
 
     // TabLayout related variables
     private ViewPagerAdapter mViewPageAdapter;
@@ -134,7 +140,7 @@ public class FeedActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_invite) {
-            // Handle the camera action
+            onInviteClicked();
         } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_settings) {
@@ -146,4 +152,30 @@ public class FeedActivity extends AppCompatActivity
         return true;
     }
     // endregion
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if(requestCode == REQUEST_INVITE) {
+            if(resultCode == RESULT_OK) {
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for(String id: ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                Log.d(TAG, "onActivityResult: CANCELLED");
+            }
+        }
+    }
 }
