@@ -1,10 +1,11 @@
 package com.example.deakyu.replicatevenmo;
 
+import com.example.deakyu.replicatevenmo.help.faq.Category;
 import com.example.deakyu.replicatevenmo.notification.Notification;
-import com.example.deakyu.replicatevenmo.notification.RemoteNotification;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -17,4 +18,7 @@ public interface VenmoAPIService {
 
     @PUT("notifications/{id}")
     Observable<Notification> updateNotification(@Path("id") int id, @Body Notification notification);
+
+    @GET("faqs")
+    Call<List<Category>> getCategories();
 }

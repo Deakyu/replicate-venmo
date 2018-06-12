@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.deakyu.replicatevenmo.help.HelpActivity;
 import com.example.deakyu.replicatevenmo.notification.NotificationActivity;
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.ViewPagerAdapter;
@@ -142,7 +143,8 @@ public class FeedActivity extends AppCompatActivity
         if (id == R.id.nav_invite) {
             onInviteClicked();
         } else if (id == R.id.nav_help) {
-
+            Intent startHelpActivityIntent = new Intent(FeedActivity.this, HelpActivity.class);
+            startActivity(startHelpActivityIntent);
         } else if (id == R.id.nav_settings) {
 
         }

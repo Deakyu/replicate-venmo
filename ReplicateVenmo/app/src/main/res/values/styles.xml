@@ -20,8 +20,6 @@
         <item name="colorPrimary">@color/colorVenmo</item>
         <item name="colorPrimaryDark">@color/colorVenmoDark</item>
         <item name="colorAccent">@color/colorVenmo</item>
-        <item name="android:windowBackground">@color/colorLightBlack</item>
-        <item name="android:textAppearance">@color/colorWhite</item>
     </style>
 
         <style name="AppVenmoTheme.NoActionBar" parent="AppTheme">
