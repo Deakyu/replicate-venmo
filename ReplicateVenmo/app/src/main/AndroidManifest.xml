@@ -37,11 +37,15 @@
             android:name=".help.faq.FAQActivity"
             android:label="Get Help"
             android:parentActivityName=".help.HelpActivity"
-            android:theme="@style/AppVenmoTheme.NoActionBar"/>
+            android:theme="@style/AppVenmoTheme.NoActionBar" />
         <activity
             android:name=".help.contactus.ContactUsActivity"
             android:label="Contact Us"
             android:parentActivityName=".help.HelpActivity"
+            android:theme="@style/AppVenmoTheme.NoActionBar" />
+        <activity
+            android:name=".help.faq.FAQDescriptionActivity"
+            android:parentActivityName=".help.faq.FAQActivity"
             android:theme="@style/AppVenmoTheme.NoActionBar"/>
     </application>
 

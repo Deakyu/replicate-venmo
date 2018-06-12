@@ -5,6 +5,7 @@ import java.util.List;
 public interface IFAQPresenter {
     void bind(IFAQActivity view);
     void unbind();
-    void getCategoriesFromServer();
+    void getCategoriesFromServer(int networkStatus);
     List<Category> getCurrentCategories();
+    void onTopicItemClicked(String topic, String description);
 }
