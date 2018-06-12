@@ -1,6 +1,8 @@
 package com.example.deakyu.replicatevenmo.help.faq;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +35,7 @@ public class FAQPresenter implements IFAQPresenter {
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
                 if(view != null) {
                     currentCategories = response.body();
-                    view.updateUiCategories(currentCategories);
+                    view.updateUiCategories(getCurrentCategories());
                 }
             }
 
@@ -46,6 +48,16 @@ public class FAQPresenter implements IFAQPresenter {
 
     @Override
     public List<Category> getCurrentCategories() {
-        return currentCategories;
+        List<Category> flattened = new ArrayList<>();
+        for(int i=0 ; i < currentCategories.size() ; i++) {
+            Category tmp = currentCategories.get(i);
+            List<Topic> topics = tmp.getTopics();
+            for(int j=0 ; j < topics.size() ; j++) {
+                List<Topic> secondTmp = new ArrayList<>();
+                secondTmp.add(topics.get(j));
+                flattened.add(new Category(tmp.getId(), tmp.getCategory(), secondTmp));
+            }
+        }
+        return flattened;
     }
 }
