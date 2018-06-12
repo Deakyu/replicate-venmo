@@ -46,7 +46,9 @@
         <activity
             android:name=".help.faq.FAQDescriptionActivity"
             android:parentActivityName=".help.faq.FAQActivity"
-            android:theme="@style/AppVenmoTheme.NoActionBar"/>
+            android:theme="@style/AppVenmoTheme.NoActionBar" />
+        <activity android:name=".help.contactus.email.EmailUsActivity" />
+        <activity android:name=".help.contactus.chat.ChatWithUsActivity"></activity>
     </application>
 
 </manifest>
