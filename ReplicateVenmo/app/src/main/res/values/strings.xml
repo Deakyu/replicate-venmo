@@ -10,4 +10,11 @@
     <string name="invitation_message">Start using Venmo!</string>
     <string name="invitation_deep_link">https://replicatevenmo.page.link</string>
     <string name="invitation_cta">Install!</string>
+    <string name="message">Message *</string>
+    <string-array name="issues_array">
+        <item>Account Settings</item>
+        <item>Frozen Account</item>
+        <item>Paid or received from the wrong person</item>
+        <item>Question about something else</item>
+    </string-array>
 </resources>
