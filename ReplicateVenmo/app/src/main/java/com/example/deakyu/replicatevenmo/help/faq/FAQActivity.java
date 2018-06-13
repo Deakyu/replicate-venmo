@@ -119,11 +119,6 @@ public class FAQActivity extends AppCompatActivity implements IFAQActivity{
     }
 
     public int getNetworkStatus() {
-        int status = NetworkUtil.getConnectivityStatusString(getApplicationContext());
-        if(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) { // Connection Lost
-            return NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
-        } else { // Connection restored
-            return NetworkUtil.NETWORK_STAUS_WIFI;
-        }
+        return NetworkUtil.getConnectivityStatusString(getApplicationContext());
     }
 }
