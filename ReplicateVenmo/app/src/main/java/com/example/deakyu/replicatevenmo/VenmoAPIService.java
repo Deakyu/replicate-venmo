@@ -1,5 +1,6 @@
 package com.example.deakyu.replicatevenmo;
 
+import com.example.deakyu.replicatevenmo.feed.public_message.Message;
 import com.example.deakyu.replicatevenmo.help.contactus.chat.Chat;
 import com.example.deakyu.replicatevenmo.help.faq.Category;
 import com.example.deakyu.replicatevenmo.notification.Notification;
@@ -26,4 +27,7 @@ public interface VenmoAPIService {
 
     @POST("chats")
     Call<Chat> insertChat(@Body Chat chat);
+
+    @GET("messages")
+    Observable<List<Message>> getMessages();
 }
