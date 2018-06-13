@@ -2,6 +2,7 @@ package com.example.deakyu.replicatevenmo.feed.public_message;
 
 import java.util.List;
 
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 
@@ -16,5 +17,9 @@ public class PublicMessageViewModel {
 
     public Observable<List<Message>> getMessages() {
         return interactor.getMessasge().observeOn(scheduler);
+    }
+
+    public Completable likedMessage(int id, Message message) {
+        return interactor.likeMessage(id, message).observeOn(scheduler);
     }
 }

@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.feed.LikeButtonClickListener;
 import com.example.deakyu.replicatevenmo.feed.MessageListAdapter;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
@@ -24,7 +25,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PublicFragment extends Fragment {
+public class PublicFragment extends Fragment implements LikeButtonClickListener {
 
     private static final String TAG = PublicFragment.class.getSimpleName();
 
@@ -49,6 +50,7 @@ public class PublicFragment extends Fragment {
 
         publicMessageRecyclerView = view.findViewById(R.id.public_messages_recycler_view);
         adapter = new MessageListAdapter(getActivity());
+        adapter.setLikeButtonClickListener(this);
         publicMessageRecyclerView.setAdapter(adapter);
         publicMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         publicMessageRecyclerView.addItemDecoration(new DividerItemDecoration(publicMessageRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -67,6 +69,18 @@ public class PublicFragment extends Fragment {
 
     private void refreshItems() {
         getMessagesFromServer();
+    }
+
+    private void likeMessage(int id, Message message) {
+        if(getNetworkStatus() == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
+            Toast.makeText(getActivity(), "Internet Not Available", Toast.LENGTH_SHORT).show();
+        } else {
+            subscriptions.add(publicMessageViewModel.likedMessage(id, message).subscribe(() -> {
+                Toast.makeText(getActivity(), message.isLiked() ? "Liked!" : "Unliked!", Toast.LENGTH_SHORT).show();
+            }, t -> {
+                Toast.makeText(getActivity(), "Error liking the payment", Toast.LENGTH_SHORT).show();
+            }));
+        }
     }
 
     private void getMessagesFromServer() {
@@ -99,4 +113,10 @@ public class PublicFragment extends Fragment {
         return NetworkUtil.getConnectivityStatusString(getActivity().getApplicationContext());
     }
 
+    @Override
+    public void onLikeButtonClick(View v, int pos) {
+        currentMessages.get(pos).setLiked(!currentMessages.get(pos).isLiked());
+        likeMessage(currentMessages.get(pos).getId(), currentMessages.get(pos));
+        adapter.setMessages(currentMessages);
+    }
 }

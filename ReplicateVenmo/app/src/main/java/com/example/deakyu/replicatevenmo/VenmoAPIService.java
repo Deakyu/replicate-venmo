@@ -9,10 +9,12 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import rx.Completable;
 import rx.Observable;
 
 public interface VenmoAPIService {
@@ -30,4 +32,7 @@ public interface VenmoAPIService {
 
     @GET("messages")
     Observable<List<Message>> getMessages();
+
+    @PUT("messages/{id}")
+    Completable likeMessage(@Path("id") int id, @Body Message message);
 }

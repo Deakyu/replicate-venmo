@@ -5,6 +5,7 @@ import com.example.deakyu.replicatevenmo.network.VenmoRetrofit;
 
 import java.util.List;
 
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -19,5 +20,10 @@ public class PublicMessageInteractor implements IPublicMessageInteractor {
     @Override
     public Observable<List<Message>> getMessasge() {
         return service.getMessages().subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Completable likeMessage(int id, Message message) {
+        return service.likeMessage(id, message).subscribeOn(Schedulers.io());
     }
 }

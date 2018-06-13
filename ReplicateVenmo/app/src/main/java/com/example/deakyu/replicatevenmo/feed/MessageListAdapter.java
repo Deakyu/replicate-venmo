@@ -45,12 +45,29 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             buttonUnfilled = iv.findViewById(R.id.like_button_unfilled);
             buttonFilled = iv.findViewById(R.id.like_button_filled);
             commentButton = iv.findViewById(R.id.comment_button);
+
+            buttonFilled.setOnClickListener(v -> {
+                buttonUnfilled.setVisibility(View.VISIBLE);
+                buttonFilled.setVisibility(View.GONE);
+                if(listener != null) listener.onLikeButtonClick(v, getAdapterPosition());
+            });
+
+            buttonUnfilled.setOnClickListener(v -> {
+                buttonUnfilled.setVisibility(View.GONE);
+                buttonFilled.setVisibility(View.VISIBLE);
+                if(listener != null) listener.onLikeButtonClick(v, getAdapterPosition());
+            });
         }
     }
 
     private final LayoutInflater inflater;
     private List<Message> messages;
     private Context context;
+    private  LikeButtonClickListener listener;
+
+    public void setLikeButtonClickListener(LikeButtonClickListener listener) {
+        this.listener = listener;
+    }
 
     public MessageListAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
