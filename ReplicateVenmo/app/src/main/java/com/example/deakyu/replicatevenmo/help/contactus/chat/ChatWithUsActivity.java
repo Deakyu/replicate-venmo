@@ -1,5 +1,6 @@
 package com.example.deakyu.replicatevenmo.help.contactus.chat;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +10,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.help.contactus.ContactUsActivity;
+import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
-public class ChatWithUsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class ChatWithUsActivity extends AppCompatActivity implements IChatActivity, AdapterView.OnItemSelectedListener {
 
     private Toolbar toolbar;
     private Spinner issueSpinner;
+    private EditText descriptionEditText;
+    private ProgressBar loader;
+
+    private IChatInteractor interactor;
+    private IChatPresenter presenter;
+
+    private Chat currentChat = new Chat("", "");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +38,14 @@ public class ChatWithUsActivity extends AppCompatActivity implements AdapterView
 
         initToolbar();
         initSpinner();
+        initLoader();
+        setPresenter();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.unbind();
+        super.onDestroy();
     }
 
     private void initToolbar() {
@@ -42,6 +63,20 @@ public class ChatWithUsActivity extends AppCompatActivity implements AdapterView
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         issueSpinner.setAdapter(adapter);
         issueSpinner.setOnItemSelectedListener(this);
+        descriptionEditText = findViewById(R.id.chat_edit_text);
+    }
+
+    private void initLoader() {
+        loader = findViewById(R.id.loader);
+        loader.setVisibility(View.GONE);
+    }
+
+    private void setPresenter() {
+        interactor = new ChatInteractor();
+        if(presenter == null) {
+            presenter = new ChatPresenter(interactor);
+            presenter.bind(this);
+        }
     }
 
     @Override
@@ -56,7 +91,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements AdapterView
 
         if(id == R.id.submit) {
             // Post request to server - create new chat
-            System.out.println("DEE submit clicked");
+            loader.setVisibility(View.VISIBLE);
+            currentChat.setDescription(descriptionEditText.getText().toString());
+            presenter.insertChat(currentChat, getNetworkStatus());
         }
 
         return super.onOptionsItemSelected(item);
@@ -64,14 +101,33 @@ public class ChatWithUsActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        System.out.println("DEE " + parent.getItemAtPosition(position).toString());
+        currentChat.setIssue(parent.getItemAtPosition(position).toString());
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Another interface callback
-        System.out.println("DEE nothing selected");
+    public void onNothingSelected(AdapterView<?> parent) {}
+
+    @Override
+    public void onNetworkNotConnected(String message) {
+        loader.setVisibility(View.GONE);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void redirectToContactUsWithToast(String message) {
+        loader.setVisibility(View.GONE);
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(ChatWithUsActivity.this, ContactUsActivity.class);
+        startActivity(intent);
+    }
+
+
+    public int getNetworkStatus() {
+        int status = NetworkUtil.getConnectivityStatusString(getApplicationContext());
+        if(status == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) { // Connection Lost
+            return NetworkUtil.NETWORK_STATUS_NOT_CONNECTED;
+        } else { // Connection restored
+            return NetworkUtil.NETWORK_STAUS_WIFI;
+        }
     }
 }
