@@ -10,11 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.help.contactus.chat.ChatWithUsActivity;
-import com.example.deakyu.replicatevenmo.help.contactus.email.EmailUsActivity;
 import com.example.deakyu.replicatevenmo.help.faq.FAQActivity;
 
 public class ContactUsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
