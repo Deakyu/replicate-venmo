@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.deakyu.replicatevenmo.feed.public_message.PublicFragment;
 import com.example.deakyu.replicatevenmo.help.HelpActivity;
 import com.example.deakyu.replicatevenmo.notification.NotificationActivity;
 import com.example.deakyu.replicatevenmo.R;
