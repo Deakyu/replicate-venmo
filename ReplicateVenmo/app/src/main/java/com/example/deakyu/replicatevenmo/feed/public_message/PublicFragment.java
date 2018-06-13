@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,14 +45,13 @@ public class PublicFragment extends Fragment {
         loader = view.findViewById(R.id.loader);
 
         mSwipeRefreshLayout = view.findViewById(R.id.public_messages_swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            refreshItems();
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(this::refreshItems);
 
         publicMessageRecyclerView = view.findViewById(R.id.public_messages_recycler_view);
         adapter = new MessageListAdapter(getActivity());
         publicMessageRecyclerView.setAdapter(adapter);
         publicMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        publicMessageRecyclerView.addItemDecoration(new DividerItemDecoration(publicMessageRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         publicMessageViewModel = new PublicMessageViewModel(new PublicMessageInteractor(), AndroidSchedulers.mainThread());
         getMessagesFromServer();
@@ -68,6 +68,7 @@ public class PublicFragment extends Fragment {
     private void refreshItems() {
         getMessagesFromServer();
     }
+
     private void getMessagesFromServer() {
         if(getNetworkStatus() == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
             Toast.makeText(getActivity(), "Internet Not Available", Toast.LENGTH_SHORT).show();

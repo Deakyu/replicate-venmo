@@ -10,6 +10,8 @@
         android:id="@+id/avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/row_padding"
+        android:paddingRight="@dimen/row_padding"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -17,6 +19,7 @@
         android:id="@+id/user_interaction_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/row_padding"
         app:layout_constraintLeft_toRightOf="@id/avatar"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -24,6 +27,7 @@
         android:id="@+id/time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/row_padding"
         app:layout_constraintTop_toBottomOf="@id/user_interaction_text_view"
         app:layout_constraintLeft_toLeftOf="@id/user_interaction_text_view"/>
 
@@ -31,6 +35,8 @@
         android:id="@+id/content_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/row_padding"
+        android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@id/time_text_view"
         app:layout_constraintLeft_toLeftOf="@id/time_text_view"/>
 
@@ -39,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingBottom="@dimen/row_padding"
         app:layout_constraintTop_toBottomOf="@id/content_text_view"
         app:layout_constraintLeft_toLeftOf="@id/content_text_view">
 
@@ -58,7 +65,7 @@
             android:id="@+id/comment_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:paddingLeft="32dp"
             android:src="@drawable/ic_chat_bubble_outline_black_24dp"/>
 
     </LinearLayout>

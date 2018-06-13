@@ -1,8 +1,12 @@
 package com.example.deakyu.replicatevenmo.feed;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +16,9 @@ import android.widget.TextView;
 
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.feed.public_message.Message;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -51,6 +57,8 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         this.context = context;
     }
 
+    private Context getContext() { return context; }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -64,7 +72,23 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         int filledVisibility = curMessage.isLiked() ? View.VISIBLE : View.GONE;
         int unFilledVisibility = curMessage.isLiked() ? View.GONE : View.VISIBLE;
 
-        Picasso.get().load(curMessage.getAvatar()).resize(200, 200).centerCrop().into(vh.avatar);
+        Picasso.get()
+                .load(curMessage.getAvatar()) .resize(150, 150)
+                .centerCrop() .into(vh.avatar, new Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap imageBitmap = ((BitmapDrawable) vh.avatar.getDrawable()).getBitmap();
+                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getContext().getResources(), imageBitmap);
+                imageDrawable.setCircular(true);
+                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                vh.avatar.setImageDrawable(imageDrawable);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                // put placeholder
+            }
+        });
         vh.userInteraction.setText(curMessage.getSender() + " paid " + curMessage.getReceiver());
         vh.timeSent.setText(curMessage.getSent());
         vh.content.setText(curMessage.getContent());
