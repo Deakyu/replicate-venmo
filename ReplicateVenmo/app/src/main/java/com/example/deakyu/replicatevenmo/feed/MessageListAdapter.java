@@ -85,9 +85,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             }
 
             @Override
-            public void onError(Exception e) {
-                // put placeholder
-            }
+            public void onError(Exception e) { /* TODO: Put placeholder instead */ }
         });
         vh.userInteraction.setText(curMessage.getSender() + " paid " + curMessage.getReceiver());
         vh.timeSent.setText(curMessage.getSent());
