@@ -1,6 +1,7 @@
 package com.example.deakyu.replicatevenmo.help.contactus;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,7 +72,8 @@ public class ContactUsActivity extends AppCompatActivity implements AdapterView.
         } else if (adapter.getItemAtPosition(pos).equals(contactHumanItems[1])) {
             intent = new Intent(ContactUsActivity.this, ChatWithUsActivity.class);
         } else if (adapter.getItemAtPosition(pos).equals(contactHumanItems[2])) {
-            // TODO: Call Us
+            String phone = "+17164102888";
+            intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         }
 
         startActivity(intent);
