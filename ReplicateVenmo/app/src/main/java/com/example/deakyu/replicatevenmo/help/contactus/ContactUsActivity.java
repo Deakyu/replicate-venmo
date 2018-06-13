@@ -68,7 +68,14 @@ public class ContactUsActivity extends AppCompatActivity implements AdapterView.
         if(adapter.getItemAtPosition(pos).equals(quickHelpItems[0])) {
             intent = new Intent(ContactUsActivity.this, FAQActivity.class);
         } else if (adapter.getItemAtPosition(pos).equals(contactHumanItems[0])) {
-            intent = new Intent(ContactUsActivity.this, EmailUsActivity.class);
+            intent = new Intent(Intent.ACTION_SEND);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setType("vnd.android.cursor.item/email");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"dql2888@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Venmo - title");
+            intent.putExtra(Intent.EXTRA_TEXT, "What is your question?");
+            startActivity(Intent.createChooser(intent, "Send email using..."));
+            return;
         } else if (adapter.getItemAtPosition(pos).equals(contactHumanItems[1])) {
             intent = new Intent(ContactUsActivity.this, ChatWithUsActivity.class);
         } else if (adapter.getItemAtPosition(pos).equals(contactHumanItems[2])) {
