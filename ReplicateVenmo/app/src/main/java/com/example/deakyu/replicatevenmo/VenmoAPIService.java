@@ -5,6 +5,7 @@ import com.example.deakyu.replicatevenmo.feed.public_message.Message;
 import com.example.deakyu.replicatevenmo.help.contactus.chat.Chat;
 import com.example.deakyu.replicatevenmo.help.faq.Category;
 import com.example.deakyu.replicatevenmo.notification.Notification;
+import com.example.deakyu.replicatevenmo.profile.User;
 
 import java.util.List;
 
@@ -40,4 +41,7 @@ public interface VenmoAPIService {
 
     @POST("messages/{id}/comments")
     Completable insertComment(@Path("id") int id, @Body Comment message);
+
+    @GET("/useres/{id}")
+    Single<User> getUserById(@Path("id") int id);
 }

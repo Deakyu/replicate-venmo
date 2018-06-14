@@ -56,7 +56,8 @@
             android:name=".feed.story.StoryActivity"
             android:label="Story"
             android:parentActivityName=".feed.FeedActivity"
-            android:theme="@style/AppVenmoTheme.NoActionBar"/>
+            android:theme="@style/AppVenmoTheme.NoActionBar" />
+        <activity android:name=".profile.ProfileActivity"></activity>
     </application>
 
 </manifest>
