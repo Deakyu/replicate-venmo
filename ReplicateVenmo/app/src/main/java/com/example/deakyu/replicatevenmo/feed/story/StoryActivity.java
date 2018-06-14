@@ -110,7 +110,6 @@ public class StoryActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         String comment = commentEditText.getText().toString();
         if(comment != null && !comment.equals("")) {
-            // TODO: Send message to server and redirect back
             Comment newComment = new Comment("Deakyu Lee", comment);
             insertCommentToServer(curMessage.getId(), newComment);
         } else {
