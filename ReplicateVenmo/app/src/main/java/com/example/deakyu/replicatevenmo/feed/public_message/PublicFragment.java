@@ -16,11 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.feed.AvatarClickListener;
 import com.example.deakyu.replicatevenmo.feed.CommentButtonClickListener;
 import com.example.deakyu.replicatevenmo.feed.LikeButtonClickListener;
 import com.example.deakyu.replicatevenmo.feed.MessageListAdapter;
 import com.example.deakyu.replicatevenmo.feed.story.StoryActivity;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
+import com.example.deakyu.replicatevenmo.profile.ProfileActivity;
 
 import java.util.List;
 
@@ -28,7 +30,9 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PublicFragment extends Fragment implements LikeButtonClickListener, CommentButtonClickListener {
+public class PublicFragment extends Fragment implements LikeButtonClickListener,
+                                                        CommentButtonClickListener,
+                                                        AvatarClickListener {
 
     private static final String TAG = PublicFragment.class.getSimpleName();
 
@@ -53,7 +57,7 @@ public class PublicFragment extends Fragment implements LikeButtonClickListener,
 
         publicMessageRecyclerView = view.findViewById(R.id.public_messages_recycler_view);
         adapter = new MessageListAdapter(getActivity());
-        adapter.setLikeButtonClickListener(this, this);
+        adapter.setClickListeners(this, this, this);
         publicMessageRecyclerView.setAdapter(adapter);
         publicMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         publicMessageRecyclerView.addItemDecoration(new DividerItemDecoration(publicMessageRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -127,6 +131,13 @@ public class PublicFragment extends Fragment implements LikeButtonClickListener,
     public void onCommentButtonClick(View v, int pos) {
         Intent intent = new Intent(getActivity(), StoryActivity.class);
         intent.putExtra("curMessage", currentMessages.get(pos));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAvatarClick(View v, int pos) {
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        // TODO: intent.putExtra("userId", currentMessages.get(pos).getUserId());
         startActivity(intent);
     }
 }

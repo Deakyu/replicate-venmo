@@ -42,6 +42,6 @@ public interface VenmoAPIService {
     @POST("messages/{id}/comments")
     Completable insertComment(@Path("id") int id, @Body Comment message);
 
-    @GET("/useres/{id}")
+    @GET("/users/{id}")
     Single<User> getUserById(@Path("id") int id);
 }

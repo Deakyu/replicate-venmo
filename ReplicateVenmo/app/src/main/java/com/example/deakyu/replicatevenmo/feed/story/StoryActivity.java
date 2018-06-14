@@ -22,6 +22,7 @@ import com.example.deakyu.replicatevenmo.feed.public_message.Message;
 import com.example.deakyu.replicatevenmo.feed.public_message.PublicMessageInteractor;
 import com.example.deakyu.replicatevenmo.feed.public_message.PublicMessageViewModel;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
+import com.example.deakyu.replicatevenmo.profile.ProfileActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

@@ -62,6 +62,10 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             commentButton.setOnClickListener(v -> {
                 if(commentButtonClickListener != null) commentButtonClickListener.onCommentButtonClick(v, getAdapterPosition());
             });
+
+            avatar.setOnClickListener(v -> {
+                if(avatarClickListener != null) avatarClickListener.onAvatarClick(v, getAdapterPosition());
+            });
         }
     }
 
@@ -70,11 +74,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private Context context;
     private LikeButtonClickListener likeButtonClickListener;
     private CommentButtonClickListener commentButtonClickListener;
+    private AvatarClickListener avatarClickListener;
 
-    public void setLikeButtonClickListener(LikeButtonClickListener likeButtonClickListener,
-                                           CommentButtonClickListener commentButtonClickListener) {
+    public void setClickListeners(LikeButtonClickListener likeButtonClickListener,
+                                           CommentButtonClickListener commentButtonClickListener,
+                                           AvatarClickListener avatarClickListener) {
         this.likeButtonClickListener = likeButtonClickListener;
         this.commentButtonClickListener = commentButtonClickListener;
+        this.avatarClickListener = avatarClickListener;
     }
 
     public MessageListAdapter(Context context) {
