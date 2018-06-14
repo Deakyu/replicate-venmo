@@ -5,6 +5,7 @@ import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 
 public class PublicMessageViewModel {
     private IPublicMessageInteractor interactor;
@@ -21,5 +22,9 @@ public class PublicMessageViewModel {
 
     public Completable likedMessage(int id, Message message) {
         return interactor.likeMessage(id, message).observeOn(scheduler);
+    }
+
+    public Completable insertComment(int id, Comment comment) {
+        return interactor.insertComment(id, comment).observeOn(scheduler);
     }
 }

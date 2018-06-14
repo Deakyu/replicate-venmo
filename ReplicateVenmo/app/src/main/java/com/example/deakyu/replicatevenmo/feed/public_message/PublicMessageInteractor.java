@@ -7,6 +7,7 @@ import java.util.List;
 
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 public class PublicMessageInteractor implements IPublicMessageInteractor {
@@ -25,5 +26,10 @@ public class PublicMessageInteractor implements IPublicMessageInteractor {
     @Override
     public Completable likeMessage(int id, Message message) {
         return service.likeMessage(id, message).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Completable insertComment(int id, Comment comment) {
+        return service.insertComment(id, comment).subscribeOn(Schedulers.io());
     }
 }

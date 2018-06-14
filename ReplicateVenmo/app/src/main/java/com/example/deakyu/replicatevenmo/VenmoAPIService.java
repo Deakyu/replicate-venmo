@@ -1,5 +1,6 @@
 package com.example.deakyu.replicatevenmo;
 
+import com.example.deakyu.replicatevenmo.feed.public_message.Comment;
 import com.example.deakyu.replicatevenmo.feed.public_message.Message;
 import com.example.deakyu.replicatevenmo.help.contactus.chat.Chat;
 import com.example.deakyu.replicatevenmo.help.faq.Category;
@@ -16,6 +17,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public interface VenmoAPIService {
     @GET("notifications")
@@ -35,4 +37,7 @@ public interface VenmoAPIService {
 
     @PUT("messages/{id}")
     Completable likeMessage(@Path("id") int id, @Body Message message);
+
+    @POST("messages/{id}/comments")
+    Completable insertComment(@Path("id") int id, @Body Comment message);
 }
