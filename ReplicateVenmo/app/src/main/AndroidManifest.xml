@@ -50,9 +50,10 @@
         <activity android:name=".help.contactus.email.EmailUsActivity" />
         <activity
             android:name=".help.contactus.chat.ChatWithUsActivity"
-            android:parentActivityName=".help.contactus.ContactUsActivity"
             android:label="Chat"
+            android:parentActivityName=".help.contactus.ContactUsActivity"
             android:theme="@style/AppVenmoTheme.NoActionBar" />
+        <activity android:name=".feed.story.StoryActivity"></activity>
     </application>
 
 </manifest>

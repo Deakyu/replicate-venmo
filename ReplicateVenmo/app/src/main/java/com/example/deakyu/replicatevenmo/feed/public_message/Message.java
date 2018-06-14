@@ -1,10 +1,14 @@
 package com.example.deakyu.replicatevenmo.feed.public_message;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Message {
+public class Message implements Parcelable {
     @SerializedName("id") private int id;
     @SerializedName("sender") private String sender;
     @SerializedName("receiver") private String receiver;
@@ -40,4 +44,45 @@ public class Message {
     public void setLiked(boolean liked) { this.liked = liked; }
     public List<Comment> getComments() { return comments; }
     public void setComments(List<Comment> comments) { this.comments = comments; }
+
+    protected Message(Parcel in) {
+        id = in.readInt();
+        sender = in.readString();
+        receiver = in.readString();
+        avatar = in.readString();
+        sent = in.readString();
+        content = in.readString();
+        liked = in.readByte() != 0;
+        comments = new ArrayList<>();
+        in.readTypedList(comments, Comment.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(sender);
+        dest.writeString(receiver);
+        dest.writeString(avatar);
+        dest.writeString(sent);
+        dest.writeString(content);
+        dest.writeByte((byte) (liked ? 1 : 0));
+        dest.writeTypedList(comments);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
+        public Message createFromParcel(Parcel source) {
+            return new Message(source);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
 }
