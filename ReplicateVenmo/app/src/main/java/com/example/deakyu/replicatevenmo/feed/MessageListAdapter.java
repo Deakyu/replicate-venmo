@@ -1,6 +1,7 @@
 package com.example.deakyu.replicatevenmo.feed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
@@ -49,13 +50,17 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             buttonFilled.setOnClickListener(v -> {
                 buttonUnfilled.setVisibility(View.VISIBLE);
                 buttonFilled.setVisibility(View.GONE);
-                if(listener != null) listener.onLikeButtonClick(v, getAdapterPosition());
+                if(likeButtonClickListener != null) likeButtonClickListener.onLikeButtonClick(v, getAdapterPosition());
             });
 
             buttonUnfilled.setOnClickListener(v -> {
                 buttonUnfilled.setVisibility(View.GONE);
                 buttonFilled.setVisibility(View.VISIBLE);
-                if(listener != null) listener.onLikeButtonClick(v, getAdapterPosition());
+                if(likeButtonClickListener != null) likeButtonClickListener.onLikeButtonClick(v, getAdapterPosition());
+            });
+
+            commentButton.setOnClickListener(v -> {
+                if(commentButtonClickListener != null) commentButtonClickListener.onCommentButtonClick(v, getAdapterPosition());
             });
         }
     }
@@ -63,10 +68,13 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private final LayoutInflater inflater;
     private List<Message> messages;
     private Context context;
-    private  LikeButtonClickListener listener;
+    private LikeButtonClickListener likeButtonClickListener;
+    private CommentButtonClickListener commentButtonClickListener;
 
-    public void setLikeButtonClickListener(LikeButtonClickListener listener) {
-        this.listener = listener;
+    public void setLikeButtonClickListener(LikeButtonClickListener likeButtonClickListener,
+                                           CommentButtonClickListener commentButtonClickListener) {
+        this.likeButtonClickListener = likeButtonClickListener;
+        this.commentButtonClickListener = commentButtonClickListener;
     }
 
     public MessageListAdapter(Context context) {

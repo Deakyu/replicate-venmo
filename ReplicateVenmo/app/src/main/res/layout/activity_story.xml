@@ -24,6 +24,8 @@
 
     <include
         layout="@layout/message_row"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/story_app_bar"/>
 
     <LinearLayout

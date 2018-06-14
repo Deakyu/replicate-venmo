@@ -1,5 +1,6 @@
 package com.example.deakyu.replicatevenmo.feed.public_message;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.feed.CommentButtonClickListener;
 import com.example.deakyu.replicatevenmo.feed.LikeButtonClickListener;
 import com.example.deakyu.replicatevenmo.feed.MessageListAdapter;
+import com.example.deakyu.replicatevenmo.feed.story.StoryActivity;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
 import java.util.List;
@@ -25,7 +28,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class PublicFragment extends Fragment implements LikeButtonClickListener {
+public class PublicFragment extends Fragment implements LikeButtonClickListener, CommentButtonClickListener {
 
     private static final String TAG = PublicFragment.class.getSimpleName();
 
@@ -50,7 +53,7 @@ public class PublicFragment extends Fragment implements LikeButtonClickListener 
 
         publicMessageRecyclerView = view.findViewById(R.id.public_messages_recycler_view);
         adapter = new MessageListAdapter(getActivity());
-        adapter.setLikeButtonClickListener(this);
+        adapter.setLikeButtonClickListener(this, this);
         publicMessageRecyclerView.setAdapter(adapter);
         publicMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         publicMessageRecyclerView.addItemDecoration(new DividerItemDecoration(publicMessageRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -118,5 +121,12 @@ public class PublicFragment extends Fragment implements LikeButtonClickListener 
         currentMessages.get(pos).setLiked(!currentMessages.get(pos).isLiked());
         likeMessage(currentMessages.get(pos).getId(), currentMessages.get(pos));
         adapter.setMessages(currentMessages);
+    }
+
+    @Override
+    public void onCommentButtonClick(View v, int pos) {
+        Intent intent = new Intent(getActivity(), StoryActivity.class);
+        intent.putExtra("curMessage", currentMessages.get(pos));
+        startActivity(intent);
     }
 }

@@ -1,5 +1,9 @@
 package com.example.deakyu.replicatevenmo.feed.story;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,10 +13,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.feed.public_message.Message;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-public class StoryActivity extends AppCompatActivity {
+public class StoryActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Toolbar toolbar;
 
@@ -30,10 +38,11 @@ public class StoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_story);
 
         initView();
+        populateView();
     }
 
     private void initView() {
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.story_toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -49,6 +58,39 @@ public class StoryActivity extends AppCompatActivity {
     }
 
     private void populateView() {
+        Message curMessage = getIntent().getParcelableExtra("curMessage");
+        if(curMessage != null) {
+            Picasso.get().load(curMessage.getAvatar()).resize(150, 150)
+                    .centerCrop().into(avatar, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Bitmap imageBitmap = ((BitmapDrawable) avatar.getDrawable()).getBitmap();
+                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                    imageDrawable.setCircular(true);
+                    imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                    avatar.setImageDrawable(imageDrawable);
+                }
 
+                @Override
+                public void onError(Exception e) { /* TODO: Put placeholder instead */ }
+            });
+            userInteraction.setText(curMessage.getSender() + " paid " + curMessage.getReceiver());
+            sent.setText(curMessage.getSent());
+            content.setText(curMessage.getContent());
+            sendButton.setOnClickListener(this);
+        } else {
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        String comment = commentEditText.getText().toString();
+        if(comment != null && !comment.equals("")) {
+            // TODO: Send message to server and redirect back
+            Toast.makeText(this, comment, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Please enter message to send", Toast.LENGTH_SHORT).show();
+        }
     }
 }
