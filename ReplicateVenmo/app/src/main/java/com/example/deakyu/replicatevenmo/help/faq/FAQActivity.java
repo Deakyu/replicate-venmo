@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
+import com.example.deakyu.replicatevenmo.network.VenmoRetrofit;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class FAQActivity extends AppCompatActivity implements IFAQActivity{
     }
 
     private void setPresenter() {
-        interactor = new FAQInteractor();
+        interactor = new FAQInteractor(VenmoRetrofit.getInstance().getVenmoService());
         presenter = (IFAQPresenter) getLastCustomNonConfigurationInstance();
         if(presenter == null) {
             presenter = new FAQPresenter(interactor);

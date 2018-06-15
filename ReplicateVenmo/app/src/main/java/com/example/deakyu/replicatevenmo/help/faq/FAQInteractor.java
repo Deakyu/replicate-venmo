@@ -11,8 +11,8 @@ public class FAQInteractor implements IFAQInteractor {
 
     private VenmoAPIService service;
 
-    public FAQInteractor() {
-        this.service = VenmoRetrofit.getInstance().getVenmoService();
+    public FAQInteractor(VenmoAPIService service) {
+        this.service = service;
     }
 
     @Override

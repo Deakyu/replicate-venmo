@@ -6,6 +6,6 @@ public interface IFAQPresenter {
     void bind(IFAQActivity view);
     void unbind();
     void getCategoriesFromServer(int networkStatus);
-    List<Category> getCurrentCategories();
     void onTopicItemClicked(String topic, String description);
+    List<Category> getCurrentCategories();
 }

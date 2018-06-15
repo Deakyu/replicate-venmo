@@ -4,7 +4,6 @@ import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import retrofit2.Call;
 import retrofit2.Callback;
