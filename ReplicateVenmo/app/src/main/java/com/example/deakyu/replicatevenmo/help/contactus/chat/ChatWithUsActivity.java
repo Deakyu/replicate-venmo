@@ -31,6 +31,7 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
 
     private Chat currentChat = new Chat("", "");
 
+    // region Activity LifeCycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
         presenter.unbind();
         super.onDestroy();
     }
+    // endregion
 
+    // region Init Views
     private void initToolbar() {
         toolbar = findViewById(R.id.chat_with_us_toolbar);
         setSupportActionBar(toolbar);
@@ -70,7 +73,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
         loader = findViewById(R.id.loader);
         loader.setVisibility(View.GONE);
     }
+    // endregion
 
+    // region Init Presenter
     private void setPresenter() {
         interactor = new ChatInteractor();
         if(presenter == null) {
@@ -78,7 +83,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
             presenter.bind(this);
         }
     }
+    // endregion
 
+    // region App bar methods
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.chat, menu);
@@ -98,7 +105,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
 
         return super.onOptionsItemSelected(item);
     }
+    // endregion
 
+    // region Spinner methods
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         currentChat.setIssue(parent.getItemAtPosition(position).toString());
@@ -106,7 +115,9 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {}
+    // endregion
 
+    // region View interface methods
     @Override
     public void onNetworkNotConnected(String message) {
         loader.setVisibility(View.GONE);
@@ -120,7 +131,7 @@ public class ChatWithUsActivity extends AppCompatActivity implements ChatContrac
         Intent intent = new Intent(ChatWithUsActivity.this, ContactUsActivity.class);
         startActivity(intent);
     }
-
+    // endregion
 
     public int getNetworkStatus() {
         return NetworkUtil.getConnectivityStatusString(getApplicationContext());
