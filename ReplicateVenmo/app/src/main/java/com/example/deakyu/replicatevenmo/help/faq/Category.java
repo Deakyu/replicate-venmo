@@ -24,4 +24,13 @@ public class Category {
     public void setCategory(String category) { this.category = category; }
     public List<Topic> getTopics() { return topics; }
     public void setTopics(List<Topic> topics) { this.topics = topics; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(this.getId()).append(", ");
+        sb.append("category: ").append(this.getCategory()).append(", ");
+        sb.append("topics: ").append(this.getTopics().toString());
+        return sb.toString();
+    }
 }

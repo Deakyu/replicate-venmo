@@ -22,7 +22,7 @@ import com.example.deakyu.replicatevenmo.network.VenmoRetrofit;
 
 import java.util.List;
 
-public class FAQActivity extends AppCompatActivity implements IFAQActivity{
+public class FAQActivity extends AppCompatActivity implements FAQContract.View{
 
     private Toolbar toolbar;
     private ActionBar ab;
@@ -30,8 +30,8 @@ public class FAQActivity extends AppCompatActivity implements IFAQActivity{
     private CategoryListAdapter adapter;
     private RecyclerView recyclerView;
 
-    private IFAQInteractor interactor;
-    private IFAQPresenter presenter;
+    private FAQContract.Interactor interactor;
+    private FAQContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +62,14 @@ public class FAQActivity extends AppCompatActivity implements IFAQActivity{
     }
 
     private void setPresenter() {
-        interactor = new FAQInteractor(VenmoRetrofit.getInstance().getVenmoService());
-        presenter = (IFAQPresenter) getLastCustomNonConfigurationInstance();
+        interactor = new FAQInteractor();
+        presenter = (FAQContract.Presenter) getLastCustomNonConfigurationInstance();
         if(presenter == null) {
             presenter = new FAQPresenter(interactor);
             presenter.bind(this);
-            presenter.getCategoriesFromServer(getNetworkStatus());
+            presenter.fetchCategoriesFromServer(getNetworkStatus());
         } else {
-            updateUiCategories(presenter.getCurrentCategories());
+            updateUiCategories(presenter.getCachedCategories());
         }
         adapter.setPresenter(presenter);
     }
@@ -102,7 +102,7 @@ public class FAQActivity extends AppCompatActivity implements IFAQActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             loader.setVisibility(View.VISIBLE);
-            presenter.getCategoriesFromServer(getNetworkStatus());
+            presenter.fetchCategoriesFromServer(getNetworkStatus());
         }
     };
 

@@ -27,4 +27,14 @@ public class Topic {
     public void setTopic(String topic) { this.topic = topic; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("id: ").append(this.getId()).append(", ");
+        sb.append("faqId: ").append(this.getFaqId()).append(", ");
+        sb.append("topic: ").append(this.getTopic()).append(", ");
+        sb.append("description: ").append(this.getDescription());
+        return sb.toString();
+    }
 }

@@ -19,15 +19,15 @@ import com.example.deakyu.replicatevenmo.R;
 import com.example.deakyu.replicatevenmo.help.contactus.ContactUsActivity;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 
-public class ChatWithUsActivity extends AppCompatActivity implements IChatActivity, AdapterView.OnItemSelectedListener {
+public class ChatWithUsActivity extends AppCompatActivity implements ChatContract.View, AdapterView.OnItemSelectedListener {
 
     private Toolbar toolbar;
     private Spinner issueSpinner;
     private EditText descriptionEditText;
     private ProgressBar loader;
 
-    private IChatInteractor interactor;
-    private IChatPresenter presenter;
+    private ChatContract.Interactor interactor;
+    private ChatContract.Presenter presenter;
 
     private Chat currentChat = new Chat("", "");
 

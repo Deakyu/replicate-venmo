@@ -30,7 +30,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     private final LayoutInflater inflater;
     private List<Category> categories;
-    private IFAQPresenter presenter;
+    private FAQContract.Presenter presenter;
 
     public CategoryListAdapter(Context context) { this.inflater = LayoutInflater.from(context); }
 
@@ -63,7 +63,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
         this.notifyDataSetChanged();
     }
 
-    public void setPresenter(IFAQPresenter presenter) {
+    public void setPresenter(FAQContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

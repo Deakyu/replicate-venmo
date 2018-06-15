@@ -6,18 +6,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChatPresenter implements IChatPresenter {
+public class ChatPresenter implements ChatContract.Presenter, ChatContract.Interactor.OnFinishedListener {
 
-    private IChatActivity view;
-    private IChatInteractor interactor;
+    private ChatContract.View view;
+    private ChatContract.Interactor interactor;
     private Chat inserted;
 
-    public ChatPresenter(IChatInteractor interactor) {
+    public ChatPresenter(ChatContract.Interactor interactor) {
         this.interactor = interactor;
     }
 
     @Override
-    public void bind(IChatActivity view) {
+    public void bind(ChatContract.View view) {
         this.view = view;
     }
 
@@ -33,20 +33,20 @@ public class ChatPresenter implements IChatPresenter {
                 view.onNetworkNotConnected("Internet Not Available!");
             }
         } else {
-            interactor.insertChat(chat).enqueue(new Callback<Chat>() {
-                @Override
-                public void onResponse(Call<Chat> call, Response<Chat> response) {
-                    if(view != null) {
-                        inserted = response.body();
-                        view.redirectToContactUsWithToast("Your chat has been recorded!");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Chat> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+            interactor.insertChat(this, chat);
         }
+    }
+
+    @Override
+    public void onFinished(Chat chat) {
+        if(view != null) {
+            inserted = chat;
+            view.redirectToContactUsWithToast("Your chat has been recorded!");
+        }
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        t.printStackTrace();
     }
 }

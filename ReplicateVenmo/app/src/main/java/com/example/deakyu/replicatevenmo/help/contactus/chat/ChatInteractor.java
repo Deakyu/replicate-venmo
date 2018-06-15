@@ -4,8 +4,10 @@ import com.example.deakyu.replicatevenmo.VenmoAPIService;
 import com.example.deakyu.replicatevenmo.network.VenmoRetrofit;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class ChatInteractor implements IChatInteractor {
+public class ChatInteractor implements ChatContract.Interactor {
 
     private VenmoAPIService service;
 
@@ -14,7 +16,17 @@ public class ChatInteractor implements IChatInteractor {
     }
 
     @Override
-    public Call<Chat> insertChat(Chat chat) {
-        return service.insertChat(chat);
+    public void insertChat(OnFinishedListener onFinishedListener, Chat chat) {
+        service.insertChat(chat).enqueue(new Callback<Chat>() {
+            @Override
+            public void onResponse(Call<Chat> call, Response<Chat> response) {
+                onFinishedListener.onFinished(chat);
+            }
+
+            @Override
+            public void onFailure(Call<Chat> call, Throwable t) {
+                onFinishedListener.onFailure(t);
+            }
+        });
     }
 }

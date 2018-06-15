@@ -9,18 +9,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FAQPresenter implements IFAQPresenter {
+public class FAQPresenter implements FAQContract.Presenter, FAQContract.Interactor.OnFinishedListener {
 
-    private IFAQActivity view;
-    private IFAQInteractor interactor;
+    private FAQContract.View view;
+    private FAQContract.Interactor interactor;
+
     private List<Category> currentCategories;
 
-    public FAQPresenter(IFAQInteractor interactor) {
+    public FAQPresenter(FAQContract.Interactor interactor) {
         this.interactor = interactor;
     }
 
     @Override
-    public void bind(IFAQActivity view) {
+    public void bind(FAQContract.View view) {
         this.view = view;
     }
 
@@ -30,38 +31,40 @@ public class FAQPresenter implements IFAQPresenter {
     }
 
     @Override
-    public void getCategoriesFromServer(int networkStatus) {
+    public void fetchCategoriesFromServer(int networkStatus) {
         if(networkStatus == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
-            if(view != null) {
-                view.onNetworkNotConnected("Internet Not Available!");
-            }
+            if(view != null) view.onNetworkNotConnected("Internet Not Available!");
         } else {
-            interactor.getCategories().enqueue(new Callback<List<Category>>() {
-                @Override
-                public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                    if(view != null) {
-                        currentCategories = response.body();
-                        view.updateUiCategories(getCurrentCategories());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Category>> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+            interactor.getCategories(this);
         }
     }
 
     @Override
-    public List<Category> getCurrentCategories() {
+    public void onTopicItemClicked(String topic, String description) {
+        if(view != null) view.startFAQDescriptionActivity(topic, description);
+    }
+
+    @Override
+    public void onFinished(List<Category> categories) {
+        currentCategories = flattenCategories(categories);
+        if(view != null) view.updateUiCategories(flattenCategories(categories));
+    }
+
+    @Override
+    public void onFailure(Throwable t) {
+        t.printStackTrace();
+    }
+
+    public List<Category> getCachedCategories() { return currentCategories; }
+
+    public List<Category> flattenCategories(List<Category> categories) {
         List<Topic> empty = new ArrayList<>();
         empty.add(new Topic(1, 1, "empty", "emtpy"));
 
         List<Category> flattened = new ArrayList<>();
 
-        for(int i=0 ; i < currentCategories.size() ; i++) {
-            Category tmp = currentCategories.get(i);
+        for(int i=0 ; i < categories.size() ; i++) {
+            Category tmp = categories.get(i);
             List<Topic> topics = tmp.getTopics();
             flattened.add(new Category(tmp.getId(), tmp.getCategory(), empty));
 
@@ -73,10 +76,5 @@ public class FAQPresenter implements IFAQPresenter {
 
         }
         return flattened;
-    }
-
-    @Override
-    public void onTopicItemClicked(String topic, String description) {
-        if(view != null) view.startFAQDescriptionActivity(topic, description);
     }
 }
