@@ -2,6 +2,8 @@ package com.example.deakyu.replicatevenmo.help.faq;
 
 import java.util.List;
 
+import rx.Observable;
+
 public interface FAQContract {
 
     interface View {
@@ -19,12 +21,10 @@ public interface FAQContract {
     }
 
     interface Interactor {
-
         interface OnFinishedListener {
             void onFinished(List<Category> categories);
             void onFailure(Throwable t);
         }
-
         void getCategories(OnFinishedListener onFinishedListener);
     }
 }

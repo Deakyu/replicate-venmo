@@ -28,7 +28,7 @@ public interface VenmoAPIService {
     Observable<Notification> updateNotification(@Path("id") int id, @Body Notification notification);
 
     @GET("faqs")
-    Call<List<Category>> getCategories();
+    Observable<List<Category>> getCategories();
 
     @POST("chats")
     Call<Chat> insertChat(@Body Chat chat);

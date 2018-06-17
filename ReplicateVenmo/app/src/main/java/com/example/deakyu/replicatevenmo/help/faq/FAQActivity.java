@@ -17,10 +17,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.deakyu.replicatevenmo.R;
+import com.example.deakyu.replicatevenmo.VenmoAPIService;
 import com.example.deakyu.replicatevenmo.network.NetworkUtil;
 import com.example.deakyu.replicatevenmo.network.VenmoRetrofit;
 
 import java.util.List;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class FAQActivity extends AppCompatActivity implements FAQContract.View{
 
@@ -30,7 +34,6 @@ public class FAQActivity extends AppCompatActivity implements FAQContract.View{
     private CategoryListAdapter adapter;
     private RecyclerView recyclerView;
 
-    private FAQContract.Interactor interactor;
     private FAQContract.Presenter presenter;
 
     @Override
@@ -62,10 +65,9 @@ public class FAQActivity extends AppCompatActivity implements FAQContract.View{
     }
 
     private void setPresenter() {
-        interactor = new FAQInteractor();
         presenter = (FAQContract.Presenter) getLastCustomNonConfigurationInstance();
         if(presenter == null) {
-            presenter = new FAQPresenter(interactor);
+            presenter = new FAQPresenter(new FAQInteractor());
             presenter.bind(this);
             presenter.fetchCategoriesFromServer(getNetworkStatus());
         } else {
@@ -98,6 +100,14 @@ public class FAQActivity extends AppCompatActivity implements FAQContract.View{
         loader.setVisibility(View.GONE);
     }
 
+    @Override
+    public void startFAQDescriptionActivity(String topic, String description) {
+        Intent intent = new Intent(FAQActivity.this, FAQDescriptionActivity.class);
+        intent.putExtra("topic", topic);
+        intent.putExtra("description", description);
+        startActivity(intent);
+    }
+
     private BroadcastReceiver networkListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -109,14 +119,6 @@ public class FAQActivity extends AppCompatActivity implements FAQContract.View{
     private void registerNetworkListener() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(networkListener, filter);
-    }
-
-    @Override
-    public void startFAQDescriptionActivity(String topic, String description) {
-        Intent intent = new Intent(FAQActivity.this, FAQDescriptionActivity.class);
-        intent.putExtra("topic", topic);
-        intent.putExtra("description", description);
-        startActivity(intent);
     }
 
     public int getNetworkStatus() {
